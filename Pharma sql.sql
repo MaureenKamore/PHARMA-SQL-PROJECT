@@ -55,6 +55,11 @@ SELECT DISTINCT Sub_channel, AVG(Price) AS Avg_price
 FROM Pharma_data_analysis
 GROUP BY Sub_channel
 
+  --Join the 'Employees' table with the 'Sales' table to get the name of the Sales Rep and the corresponding sales records.
+ SELECT DISTINCT E.[Name_of_Sales_Rep], S.[Sales]
+ FROM Pharma_data_analysis E
+ JOIN Pharma_data_analysis S ON E.Distributor = S.Distributor
+
 --Retrieve all sales made by employees from ' Rendsburg ' in the year 2018.
 SELECT Sales
 FROM Pharma_data_analysis
@@ -75,12 +80,12 @@ ORDER BY Sales DESC
 
 --Calculate the monthly total sales for each sub-channel, and then calculate the average monthly sales for each sub-channel over the years
 WITH Monthly_Total_Sales AS (
-  SELECT Sub_channel, SUM(Sales) AS Monthly_sales
+  SELECT Sub_channel, Year, Month, SUM(Sales) AS Monthly_sales
   FROM Pharma_data_analysis
   GROUP BY Sub_channel, Year, Month
 )
-SELECT Sub_channel, AVG(Sales) AS Average_monthly_sales
-FROM Pharma_data_analysis
+SELECT Sub_channel, AVG(Monthly_Sales) AS Average_monthly_sales
+FROM Monthly_Total_Sales
 GROUP BY Sub_channel
 ORDER BY Sub_channel
 
@@ -125,7 +130,7 @@ LEFT JOIN
 SELECT Year, Month, MIN(Sales) AS Lowest_Sales
 FROM Pharma_data_analysis
 GROUP BY Year, Month
-ORDER BY Year, Lowest_Sales
+ORDER BY Lowest_Sales
 
 
 WITH Monthly_Sales AS (
